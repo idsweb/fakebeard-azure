@@ -26,7 +26,7 @@ Select-AzSubscription -Subscription subscriptionid
 To deploy this create a new PowerShell deployment create a resource group if needed.
 ``` PowerShell
 # Connect-AzAccount
-# Select-AzSubscription -Subscription 59c33456-2122-4779-82e0-b3022b7ed84b
+# Select-AzSubscription -Subscription xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 $resourcegroupname = 'rg-name-ide'
 $location = 'location'
