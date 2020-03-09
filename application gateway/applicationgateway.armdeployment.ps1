@@ -19,4 +19,4 @@ $deploymentId = New-Guid
 New-AzResourceGroupDeployment `
 -ResourceGroupName $resourceGroupName `
 -TemplateFile $templatePath `
--Name $deploymentId 
+-Name $deploymentId -Mode Complete

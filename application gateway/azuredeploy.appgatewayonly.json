@@ -1,0 +1,204 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string"
+        },
+        "applicationGatewayName": {
+            "type": "string"
+        },
+        "tier": {
+            "type": "string"
+        },
+        "skuSize": {
+            "type": "string"
+        },
+        "capacity": {
+            "type": "int",
+            "defaultValue": 2
+        },
+        "subnetName": {
+            "type": "string"
+        },
+        "zones": {
+            "type": "array"
+        }
+    },
+    "variables": {
+        "vnetId": "/subscriptions/59c33456-2122-4779-82e0-b3022b7ed84b/resourceGroups/rg-applicationgatewaydemo-ide/providers/Microsoft.Network/virtualNetworks/myVirtualNetwork-zfatczlj6bzg6",
+        "publicIPRef": "/subscriptions/59c33456-2122-4779-82e0-b3022b7ed84b/resourceGroups/rg-applicationgatewaydemo-ide/providers/Microsoft.Network/publicIPAddresses/myAppGatewayPublicIp-zfatczlj6bzg6",
+        "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
+        "applicationGatewayId": "[resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName'))]"
+    },
+    "resources": [
+        {
+            "name": "[parameters('applicationGatewayName')]",
+            "type": "Microsoft.Network/applicationGateways",
+            "apiVersion": "2019-09-01",
+            "location": "[parameters('location')]",
+            "zones": "[parameters('zones')]",
+            "dependsOn": [],
+            "tags": {
+                "Project": "Azure training"
+            },
+            "properties": {
+                "sku": {
+                    "name": "[parameters('skuSize')]",
+                    "tier": "[parameters('tier')]",
+                    "capacity": "[parameters('capacity')]"
+                },
+                "gatewayIPConfigurations": [
+                    {
+                        "name": "appGatewayIpConfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            }
+                        }
+                    }
+                ],
+                "frontendIPConfigurations": [
+                    {
+                        "name": "appGwPublicFrontendIp",
+                        "properties": {
+                            "PublicIPAddress": {
+                                "id": "[variables('publicIPRef')]"
+                            }
+                        }
+                    }
+                ],
+                "frontendPorts": [
+                    {
+                        "name": "port_80",
+                        "properties": {
+                            "Port": 80
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "backendpool1",
+                        "properties": {
+                            "backendAddresses": [
+                                {
+                                    "fqdn": "mywebapp1-zfatczlj6bzg6.azurewebsites.net"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "backendpool2",
+                        "properties": {
+                            "backendAddresses": [
+                                {
+                                    "fqdn": "mywebapp2-zfatczlj6bzg6.azurewebsites.net"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "backendHttpSettingsCollection": [
+                    {
+                        "name": "backendhttpsettings",
+                        "properties": {
+                            "Port": 80,
+                            "Protocol": "Http",
+                            "cookieBasedAffinity": "Disabled",
+                            "requestTimeout": 20,
+                            "pickHostNameFromBackendAddress": true,
+                            "probe": {
+                                "id": "[concat(variables('applicationGatewayId'), '/probes/backendhttpsettings52b682e8-9269-4a2f-8f20-4ab9c4e2e02c')]"
+                            }
+                        }
+                    }
+                ],
+                "httpListeners": [
+                    {
+                        "name": "listener2",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(variables('applicationGatewayId'), '/frontendIPConfigurations/appGwPublicFrontendIp')]"
+                            },
+                            "frontendPort": {
+                                "id": "[concat(variables('applicationGatewayId'), '/frontendPorts/port_80')]"
+                            },
+                            "protocol": "Http",
+                            "sslCertificate": null,
+                            "hostName": "webapplication2.contoso.com",
+                            "requireServerNameIndication": false
+                        }
+                    },
+                    {
+                        "name": "listener1",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(variables('applicationGatewayId'), '/frontendIPConfigurations/appGwPublicFrontendIp')]"
+                            },
+                            "frontendPort": {
+                                "id": "[concat(variables('applicationGatewayId'), '/frontendPorts/port_80')]"
+                            },
+                            "protocol": "Http",
+                            "sslCertificate": null,
+                            "hostName": "webapplication1.contoso.com",
+                            "requireServerNameIndication": false
+                        }
+                    }
+                ],
+                "requestRoutingRules": [
+                    {
+                        "Name": "rule2",
+                        "properties": {
+                            "RuleType": "Basic",
+                            "httpListener": {
+                                "id": "[concat(variables('applicationGatewayId'), '/httpListeners/listener2')]"
+                            },
+                            "backendAddressPool": {
+                                "id": "[concat(variables('applicationGatewayId'), '/backendAddressPools/backendpool2')]"
+                            },
+                            "backendHttpSettings": {
+                                "id": "[concat(variables('applicationGatewayId'), '/backendHttpSettingsCollection/backendhttpsettings')]"
+                            }
+                        }
+                    },
+                    {
+                        "Name": "rule1",
+                        "properties": {
+                            "RuleType": "Basic",
+                            "httpListener": {
+                                "id": "[concat(variables('applicationGatewayId'), '/httpListeners/listener1')]"
+                            },
+                            "backendAddressPool": {
+                                "id": "[concat(variables('applicationGatewayId'), '/backendAddressPools/backendpool2')]"
+                            },
+                            "backendHttpSettings": {
+                                "id": "[concat(variables('applicationGatewayId'), '/backendHttpSettingsCollection/backendhttpsettings')]"
+                            }
+                        }
+                    }
+                ],
+                "enableHttp2": false,
+                "sslCertificates": [],
+                "probes": [
+                    {
+                        "name": "backendhttpsettings52b682e8-9269-4a2f-8f20-4ab9c4e2e02c",
+                        "properties": {
+                            "backendHttpSettings": [
+                                {
+                                    "id": "[concat(variables('applicationGatewayId'), '/backendHttpSettingsCollection/backendhttpsettings')]"
+                                }
+                            ],
+                            "interval": 30,
+                            "minServers": 0,
+                            "path": "/",
+                            "protocol": "Http",
+                            "timeout": 30,
+                            "unhealthyThreshold": 3,
+                            "pickHostNameFromBackendHttpSettings": true
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
