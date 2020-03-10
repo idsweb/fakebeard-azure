@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "webAppPlanName": {
-            "defaultValue":"myWebAppPlan",
-            "type":"string"
+            "defaultValue": "myWebAppPlan",
+            "type": "string"
         },
         "webApp1Name": {
             "defaultValue": "myWebApp1",
             "type": "string"
-        },        
+        },
         "webApp2Name": {
             "defaultValue": "myWebApp2",
             "type": "string"
@@ -33,6 +33,7 @@
     },
     "variables": {
         "location": "[parameters('location')]",
+        "storageAccountname":"[concat('str', uniqueString(resourceGroup().id) )]",
         "virtualNetworkName": "[concat(parameters('virtualNetworkName'), '-', uniqueString(resourceGroup().id))]",
         "virtualNetworkAddressPrefix": "10.0.0.0/20",
         "virtualNetworkSubnetName": "[parameters('appGatewaySubnetName')]",
@@ -112,6 +113,31 @@
                 "dnsSettings": {
                     "domainNameLabel": "[toLower(variables('webApp1Name'))]"
                 }
+            }
+        },
+        {
+            "name": "[variables('storageAccountname')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-04-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "accessTier": "Hot",
+                "supportsHttpsTrafficOnly": true
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2018-07-01",
+            "name": "[concat(variables('storageAccountname'),'/default/demo')]",
+            "dependsOn": [
+                "[variables('storageAccountname')]"
+            ],
+            "properties": {
+                "publicAccess": "None"
             }
         },
         {

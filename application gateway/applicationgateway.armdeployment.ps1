@@ -1,5 +1,7 @@
+# [System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials 
 # Connect-AzAccount
-# Select-AzSubscription -Subscription 59c33456-2122-4779-82e0-b3022b7ed84b
+# Select-AzSubscription -Subscription xxxxx
+
 
 $resourcegroupname = 'rg-applicationgatewaydemo-ide'
 $location = 'uksouth'
@@ -15,8 +17,9 @@ Test-AzResourceGroupDeployment `
 -TemplateFile $templatePath `
 -Verbose
 
+
 $deploymentId = New-Guid
 New-AzResourceGroupDeployment `
 -ResourceGroupName $resourceGroupName `
 -TemplateFile $templatePath `
--Name $deploymentId -Mode Complete
+-Name $deploymentId
