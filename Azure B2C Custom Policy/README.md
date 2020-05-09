@@ -1,0 +1,1 @@
+# Custom Policy sample with local and Azure Active Directory signin
