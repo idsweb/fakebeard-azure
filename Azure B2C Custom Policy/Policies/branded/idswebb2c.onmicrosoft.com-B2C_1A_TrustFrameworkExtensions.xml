@@ -19,7 +19,7 @@
     <ContentDefinitions>
       <!-- This content definition is to render an error page that displays unhandled errors. -->
       <ContentDefinition Id="api.error">
-        <LoadUri>~/tenant/templates/AzureBlue/exception.cshtml</LoadUri>
+        <LoadUri>https://stridsb2cbranding.blob.core.windows.net/$web/lccexception.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:globalexception:1.1.0</DataUri>
         <Metadata>
@@ -45,7 +45,7 @@
         </Metadata>
       </ContentDefinition>
       <ContentDefinition Id="api.signuporsignin">
-        <LoadUri>https://stridsb2cbranding.blob.core.windows.net/$web/customize-ui.html</LoadUri>
+        <LoadUri>https://stridsb2cbranding.blob.core.windows.net/$web/lccunified.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:unifiedssp:1.0.0</DataUri>
         <Metadata>
@@ -53,7 +53,7 @@
         </Metadata>
       </ContentDefinition>
       <ContentDefinition Id="api.selfasserted">
-        <LoadUri>~/tenant/templates/AzureBlue/selfAsserted.cshtml</LoadUri>
+        <LoadUri>https://stridsb2cbranding.blob.core.windows.net/$web/lccselfAsserted.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:selfasserted:1.1.0</DataUri>
         <Metadata>
@@ -61,7 +61,7 @@
         </Metadata>
       </ContentDefinition>
       <ContentDefinition Id="api.selfasserted.profileupdate">
-        <LoadUri>~/tenant/templates/AzureBlue/selfAsserted.cshtml</LoadUri>
+        <LoadUri>https://stridsb2cbranding.blob.core.windows.net/$web/lccselfAsserted.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:selfasserted:1.1.0</DataUri>
         <Metadata>
@@ -69,7 +69,7 @@
         </Metadata>
       </ContentDefinition>
       <ContentDefinition Id="api.localaccountsignup">
-        <LoadUri>~/tenant/templates/AzureBlue/selfAsserted.cshtml</LoadUri>
+        <LoadUri>https://stridsb2cbranding.blob.core.windows.net/$web/lccselfAsserted.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:selfasserted:1.1.0</DataUri>
         <Metadata>
@@ -77,7 +77,7 @@
         </Metadata>
       </ContentDefinition>
       <ContentDefinition Id="api.localaccountpasswordreset">
-        <LoadUri>~/tenant/templates/AzureBlue/selfAsserted.cshtml</LoadUri>
+        <LoadUri>https://stridsb2cbranding.blob.core.windows.net/$web/lccselfAsserted.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:selfasserted:1.1.0</DataUri>
         <Metadata>
@@ -173,11 +173,6 @@
             <OutputClaim ClaimTypeReferenceId="givenName" />
             <OutputClaim ClaimTypeReferenceId="surname" />
             <OutputClaim ClaimTypeReferenceId="city" />
-            <!-- REST Tutorial - Required to present the text box to collect the data from the user -->
-            <OutputClaim ClaimTypeReferenceId="loyaltyId" />
-            <!-- REST Tutorial - Required to pass the promoCode returned from "REST-ValidateProfile" 
-        to subsequent orchestration steps and token issuance-->
-            <OutputClaim ClaimTypeReferenceId="promoCode" />
           </OutputClaims>
         </TechnicalProfile>
         <!--Edit profile page-->
