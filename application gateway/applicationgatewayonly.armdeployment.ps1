@@ -4,6 +4,12 @@
 $resourcegroupname = 'rg-applicationgatewaydemo-ide'
 $templatePath = 'azuredeploy.appgatewayonly.json'
 
+$resourceGroup = Get-AzResourceGroup -Name $resourcegroupname -ErrorAction SilentlyContinue
+
+if($resourceGroup -eq $null){
+    New-AzResourceGroup -Name $resourcegroupname -Location 'uksouth'
+}
+
 Test-AzResourceGroupDeployment `
 -ResourceGroupName $resourceGroupName `
 -TemplateFile $templatePath `
